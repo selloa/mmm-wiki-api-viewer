@@ -3,3 +3,6 @@ dist/
 
 # Optional local dump (also often gitignored as *.ndjson in the API repo)
 data/*.ndjson
+
+# Build / preview copy of the dump next to index.html
+public/wiki-pages.ndjson

@@ -36,10 +36,29 @@ type BrowseRow = {
 
 type DetailMode = "details" | "raw";
 
+/**
+ * Directory URL for the current HTML page (trailing slash). Avoids mis-resolving
+ * `./wiki-pages.ndjson` when the location is `…/repo` without a trailing slash (GitHub Pages).
+ */
+function directoryBaseHref(): string {
+  const u = new URL(window.location.href);
+  u.hash = "";
+  u.search = "";
+  let p = u.pathname;
+  if (!p.endsWith("/")) {
+    const last = p.split("/").pop() ?? "";
+    if (last.includes(".")) {
+      p = p.replace(/\/[^/]+$/, "/") || "/";
+    } else {
+      p = `${p}/`;
+    }
+  }
+  u.pathname = p;
+  return u.href;
+}
+
 function ndjsonUrl(): string {
-  const base = import.meta.env.BASE_URL ?? "/";
-  if (base === "/" || base === "") return `/${NDJSON_NAME}`;
-  return base.endsWith("/") ? `${base}${NDJSON_NAME}` : `${base}/${NDJSON_NAME}`;
+  return new URL(NDJSON_NAME, directoryBaseHref()).href;
 }
 
 function parseNdjson(text: string): WikiPage[] {
