@@ -1,0 +1,5 @@
+node_modules/
+dist/
+
+# Optional local dump (also often gitignored as *.ndjson in the API repo)
+data/*.ndjson
